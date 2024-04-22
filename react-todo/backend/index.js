@@ -1,10 +1,10 @@
 const dotenv = require("dotenv");
+dotenv.config();
 const express = require("express");
-const { createTodo, updateTodo } = require("./types");
 const { todo } = require("./db");
+const { createTodo, updateTodo } = require("./types");
 const cors = require("cors");
 
-dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
