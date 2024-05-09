@@ -1,26 +1,33 @@
-import { Hono, Next, Context } from 'hono'
+import { Hono, Next } from "hono";
+import { PrismaClient } from "@prisma/client/edge";
+import { withAccelerate } from "@prisma/extension-accelerate";
+import { env } from "hono/adapter";
 
-const app = new Hono()
+const app = new Hono();
 
-async function authMiddleware(c: Context, next: Next) {
-  if (c.req.header("Authorization")) {
-    await next()
-  } else {
-    return c.text("you dont have access");
-  }
-}
+app.post("/", async (c) => {
+  const body: {
+    name: string;
+    email: string;
+    password: string;
+  } = await c.req.json();
+  const { DATABASE_URL } = env<{ DATABASE_URL: string }>(c);
 
-app.post('/', authMiddleware, async (c) => {
-  const body = await c.req.json()
+  const prisma = new PrismaClient({
+    datasourceUrl: DATABASE_URL,
+  }).$extends(withAccelerate());
+
   console.log(body);
-  console.log(c.req.header("Authorization"));
-  console.log(c.req.query("param"));
 
-  return c.text('Hello Hono!')
-})
+  await prisma.user.create({
+    data: {
+      name: body.name,
+      email: body.email,
+      password: body.password,
+    },
+  });
 
-app.get('/', async (c) => {
-  return c.text("HELLO THERE")
-})
+  return c.json({ msg: "user created successfully" });
+});
 
-export default app
+export default app;

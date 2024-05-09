@@ -1,7 +1,8 @@
 name = "hono-cloudflare"
 compatibility_date = "2023-12-01"
 
-# [vars]
+[vars]
+DATABASE_URL="your-db-url"
 # MY_VAR = "my-variable"
 
 # [[kv_namespaces]]
