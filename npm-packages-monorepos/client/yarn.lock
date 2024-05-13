@@ -212,6 +212,13 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
+"@dizbit/common@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@dizbit/common/-/common-1.0.1.tgz"
+  integrity sha512-n0WUlg2pDtl+2PPS8v6VgsuijPu2gtPodaTOjbXTIyZTL2eZ3iUHKWsU2P+lk2z4tXGxXvoXnQIhuQ+A1rjrSA==
+  dependencies:
+    zod "^3.23.8"
+
 "@esbuild/win32-x64@0.18.16":
   version "0.18.16"
   resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.18.16.tgz"
@@ -1451,3 +1458,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@^3.23.8:
+  version "3.23.8"
+  resolved "https://registry.npmjs.org/zod/-/zod-3.23.8.tgz"
+  integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==
