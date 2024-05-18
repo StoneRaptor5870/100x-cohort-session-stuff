@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { sign } from "hono/jwt";
 import { Context } from "hono";
-import { signupInput, signinInput } from "../zod/schemas";
+import { signupInput, signinInput } from "@dizbit/blog-common";
 
 export const signup = async (
   c: Context<{

@@ -1,4 +1,4 @@
-import { createBlogInput, updateBlogInput } from "../zod/schemas";
+import { createBlogInput, updateBlogInput } from "@dizbit/blog-common";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Context } from "hono";
