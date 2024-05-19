@@ -21,7 +21,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       );
       const jwt = response.data;
       localStorage.setItem("token", jwt);
-      navigate("/blogs");
+      navigate("/allBlogs");
     } catch (e) {
       alert("Error while signing up");
       // alert the user here that the request failed
