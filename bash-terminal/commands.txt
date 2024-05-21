@@ -1,0 +1,10 @@
+1 - pwd (print working directory)
+pwd
+/home/nischay
+
+2 - cd (change directory)
+cd <name of folder>
+cd stuff/
+cd .. <to go one level down> 
+
+3 - ls (for listing files in that directory)
