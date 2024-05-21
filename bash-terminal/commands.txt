@@ -8,3 +8,75 @@ cd stuff/
 cd .. <to go one level down> 
 
 3 - ls (for listing files in that directory)
+touch index.js
+:~/stuff$ ls
+index.js
+
+ls -l (for details of files)
+ls -t
+ls -lt
+ls -la (to see hidden files)
+ls -lr
+ls -s (to know size)
+ls *.js (to get all js file / any extension)
+ls Zoo* (finds all files starting with Zoo / anything)
+
+4 - mkdir (make directory)
+mkdir <name of directory>
+mkdir stuff
+mkdir -p frontend/html
+mkdir -p frontend/css
+
+5 - touch (to create empty files)
+touch <name of file with extension>
+touch index.js
+
+6 - cat (to see the content of the files)
+cat index.txt
+cat > index.txt (to append stuff in the file)
+
+7 - vi (vim command to edit files in terminal)
+vi index.txt
+
+8 - mv (to move a file to some path)
+mv <name of file> <path of directory to be moved>
+mv <folder src> <folder dest>
+mv index.txt
+
+mv script.js runtime-script.js (to rename files)
+
+9 - cp (copy files)
+cp <name of file> <path of directory to be moved>
+cp -r <folder src> <folder dest>
+
+10 - rm (remove files)
+rm <name of file>
+rm -r <name of directory>
+
+11 - chmod (change file permissions)
+modify the read, write and execute permissions of a file
+chmod ugo+rwz <name of file> (add permissions rwx read, write and execute to users, groups and others)
+chmod ugo-w <name of file> (remove permissions of w write to users, groups and others)
+chmod -r ugo+rwz <name of folder>
+
+4 - for read permissions
+2 - for write permissions
+1 - for execute permissions
+
+12 - echo
+echo "hello world"
+echo $PATH
+
+13 - | (pipe operator)
+used to combine 2 or more commands together
+
+14 - wc (basic stats of files like lines, words and letters)
+wc <name of file>
+
+15 - grep (lets you find occurences of words, phrases, regex)
+grep <pharse, word, regex> <name of file>
+grep -c <pharse, word, regex> <name of file> (for count)
+grep -h <pharse, word, regex> <name of file> (for lines)
+grep -hi <pharse, word, regex> <name of file>
+grep -hr <pharse, word, regex> <name of file>
+grep -hin <pharse, word, regex> <name of file> (for better output)
