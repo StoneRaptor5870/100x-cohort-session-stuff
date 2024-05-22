@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 import express, { Express, Request, Response } from 'express';
 import { User } from './db';
 

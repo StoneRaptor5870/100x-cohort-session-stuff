@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  mongo_nischay:
+    image: mongo
+    container_name: mongo_nischay
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    image: dizbit/cohort
+    container_name: backend_app
+    depends_on:
+      - mongo_nischay
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URL: "mongodb://mongo_nischay:27017"
+
+volumes:
+  mongodb_data:
