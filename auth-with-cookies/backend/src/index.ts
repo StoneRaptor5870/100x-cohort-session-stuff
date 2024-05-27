@@ -24,9 +24,10 @@ app.post("/signin", (req, res) => {
     {
       id: 1,
     },
-    JWT_SECRET
+    JWT_SECRET,
+    { expiresIn: '1h' }
   );
-  res.cookie("token", token);
+  res.cookie("token", token, { httpOnly: true, secure: false });
   res.send("Logged in!");
 });
 
@@ -40,7 +41,7 @@ app.get("/user", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.cookie("token", "ads");
+  res.clearCookie("token");
   res.json({
     message: "Logged out!",
   });
