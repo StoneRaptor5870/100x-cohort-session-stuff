@@ -1,21 +1,22 @@
-import { createClient, RedisClientType  } from "redis";
+import { createClient, RedisClientType } from "redis";
 const client: RedisClientType = createClient({
-  url: "redis://127.0.0.1:6379"
+  url: "redis://127.0.0.1:6379",
 });
 
-type Result = {key: string, element: string};
+type Result = { key: string; element: string };
 
 async function processSubmission(submission: string) {
   const { problemId, code, language } = JSON.parse(submission);
 
   console.log(`Processing submission for problemId ${problemId}...`);
-    console.log(`Code: ${code}`);
-    console.log(`Language: ${language}`);
-    // Here you would add your actual processing logic
+  console.log(`Code: ${code}`);
+  console.log(`Language: ${language}`);
+  // Here you would add your actual processing logic
 
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    console.log(`Finished processing submission for problemId ${problemId}.`);
+  // Simulate processing delay
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  console.log(`Finished processing submission for problemId ${problemId}.`);
+  client.publish("problem_done", JSON.stringify({ problemId, status: "TLE" }));   // pub sub
 }
 
 async function startWorker() {
@@ -26,7 +27,7 @@ async function startWorker() {
     // Main loop
     while (true) {
       try {
-        const result = await client.brPop("problems", 0) as unknown as Result;
+        const result = (await client.brPop("problems", 0)) as unknown as Result;
         console.log("Result from brPop:", result);
 
         if (result && result.element) {
