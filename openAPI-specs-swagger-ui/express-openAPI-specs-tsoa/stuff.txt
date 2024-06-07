@@ -1,0 +1,1 @@
+npx openapi-typescript-codegen -i ./build/swagger.json -o node-client -c fetch

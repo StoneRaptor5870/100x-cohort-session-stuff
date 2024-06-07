@@ -1,0 +1,122 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Todo": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"done": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"title",
+					"description",
+					"id",
+					"done"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_Todo.title-or-description_": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title",
+					"description"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"TodoCreationParams": {
+				"$ref": "#/components/schemas/Pick_Todo.title-or-description_"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "express-openapi-specs-tsoa",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/todo/{todoId}": {
+			"get": {
+				"operationId": "GetTodo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Todo"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieves the details of an todo.\r\nSupply the unique user ID from either and receive corresponding todo details.",
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "todoId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/todo": {
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"201": {
+						"description": "Created"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TodoCreationParams"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
