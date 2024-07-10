@@ -15,7 +15,7 @@ app.post('/generate-otp', (req, res) => {
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
-  const otp = Math.floor(100000 + Math.random() * 900000).toString(); // generates a 6-digit OTP
+  const otp = Math.floor(1000 + Math.random() * 9000).toString(); // generates a 6-digit OTP
   otpStore[email] = otp;
 
   console.log(`OTP for ${email}: ${otp}`); // Log the OTP to the console
