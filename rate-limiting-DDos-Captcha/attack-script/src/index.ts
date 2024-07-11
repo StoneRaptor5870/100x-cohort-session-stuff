@@ -1,6 +1,6 @@
 import axios from "axios";
 
-async function sendRequest(otp: number) {
+async function sendRequest(otp: string) {
   let data = JSON.stringify({
     "email": "abc@gmail.com",
     "otp": otp,
@@ -28,7 +28,7 @@ async function main() {
     const promises = [];
     console.log("here for " + i);
     for (let j = 0; j < 100; j++) {
-      promises.push(sendRequest((i+j)));
+      promises.push(sendRequest((i+j).toString()));
     }
     await Promise.all(promises);
   }
