@@ -1,4 +1,4 @@
-import { games } from "./store";
+import { gameManager } from "./gameManager";
 import { startLogger } from "./logger";
 
 startLogger();
@@ -6,13 +6,12 @@ startLogger();
 // state management
 
 setInterval(() => {
-  games.push({
+  gameManager.addGame({
     id: Math.random().toString(),
     whitePlayer: "nischay",
     blackPlayer: "anuj",
     moves: [],
   });
 }, 5000);
-
 
 // web socket server
