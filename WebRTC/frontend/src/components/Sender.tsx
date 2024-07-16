@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 export function Sender() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:8080');
@@ -59,11 +60,28 @@ export function Sender() {
     });
     console.log('Sender got stream:', stream);
     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+      playVideo();
+    }
   }
 
+  const playVideo = async () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      try {
+        await videoRef.current.play();
+        console.log('Playback started successfully.');
+      } catch (error) {
+        console.error('Failed to start playback:', error);
+      }
+    }
+  };
+
   return (
-    <div>
+    <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "100px"}}>
       Sender
+      <video ref={videoRef} autoPlay width="800" height="500"></video>
       <button onClick={startSendingVideo}>Send Video</button>
     </div>
   );
