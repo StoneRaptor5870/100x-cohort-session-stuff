@@ -25,6 +25,9 @@ jobs:
       - name: Ensure Docker Compose is available
         run: docker-compose version
 
+      - name: Make scripts executable
+        run: chmod +x ./testing/integration-tests/scripts/*.sh
+
       - name: Copy .env.example to .env
         run: cp ./testing/integration-tests/.env.example ./testing/integration-tests/.env
 
