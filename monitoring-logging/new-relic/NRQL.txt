@@ -1,0 +1,26 @@
+NRQL (New Relic Query Language) is a SQL-like query language used to query data within New Relic, a monitoring and observability platform.
+NRQL allows users to perform complex data analysis and create custom dashboards and alerts by querying their application and infrastructure
+performance data stored in New Relic.
+
+Fetch all CPU usage
+
+SELECT average(cpuPercent) AS `CPU used %` FROM SystemSample WHERE (entityGuid = 'xyz') TIMESERIES AUTO
+
+Filter by High CPU Usage
+
+SELECT average(cpuPercent) AS `CPU used %`
+FROM SystemSample
+WHERE (entityGuid = 'NDQ2MDY2NXxJTkZSQXxOQXwzOTczMjM4ODc0NzI4NDk0NzYz') AND cpuPercent > 2
+TIMESERIES AUTO
+
+Multiple graphs in the same timeline
+
+SELECT average(transmitBytesPerSecond) AS `Transmit bytes per second`, average(receiveBytesPerSecond) AS `Receive bytes per second` FROM NetworkSample WHERE (entityGuid = 'NDQ2MDY2NXxJTkZSQXxOQXwtMzE2MTI3OTkyNzM3NDEzMTE1Mw') TIMESERIES AUTO
+
+Facets
+
+SELECT average(cpuPercent) AS `CPU used %`
+FROM SystemSample
+WHERE entityGuid IN ('xyz', 'abc')
+FACET entityGuid
+TIMESERIES AUTO
