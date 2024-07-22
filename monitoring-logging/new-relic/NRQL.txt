@@ -24,3 +24,26 @@ FROM SystemSample
 WHERE entityGuid IN ('xyz', 'abc')
 FACET entityGuid
 TIMESERIES AUTO
+
+Metrics on logs
+
+You can add metrics on top of log counts (esp for errors) to catch if a certain error is being thrown too often/there is a spike.
+
+SELECT count(`message`) FROM Log WHERE (`entity.guid` = 'NDQ2MDY2NXxBUE18QVBQTElDQVRJT058NTY0ODg2NzU5' OR
+`entity.guids` LIKE '%NDQ2MDY2NXxBUE18QVBQTElDQVRJT058NTY0ODg2NzU5%' OR `service_name` = 'test' OR `serviceName` = 'test'
+OR `service.name` = 'test' OR `entity.name` = 'test') AND (level='error') TIMESERIES AUTO
+
+You can also add individual set of metrics on individual errors
+
+AND message LIKE '%there was an error%'
+
+p95 p99
+
+SELECT percentile(duration, 95) * 1000, 
+percentile(duration, 99) * 1000,
+median(duration * 1000) as Median,
+average(duration * 1000) as Average
+FROM Transaction
+WHERE (entityGuid = 'NDQ2MDY2NXxBUE18QVBQTElDQVRJT058NTY0ODg2NzU5')
+AND (transactionType = 'Web')
+LIMIT MAX SINCE 1800 seconds AGO EXTRAPOLATE TIMESERIES 
