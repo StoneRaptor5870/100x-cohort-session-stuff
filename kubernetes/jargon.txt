@@ -1,0 +1,80 @@
+docker run -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword  -d postgres
+
+kind
+
+kind create cluster --name local
+docker ps
+kind delete cluster -n local
+
+Multi node setup
+Create a clusters.yml file
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+
+kind create cluster --config clusters.yml --name local
+
+Kubernetes API server does authentication checks and prevents you from getting in.
+All of your authorization credentials are stored by kind in ~/.kube/config
+
+kubectl
+kubectl is a command-line tool for interacting with Kubernetes clusters. It provides a way to communicate with the
+Kubernetes API server and manage Kubernetes resources.
+
+kubectl get nodes
+kubectl get pods
+
+kubectl get nodes --v=8
+
+Creating a Pod
+
+Starting using docker
+docker run -p 3005:80 nginx
+
+Starting a pod using k8s
+
+Start a pod
+kubectl run nginx --image=nginx --port=80
+
+Check the status of the pod
+kubectl get pods
+
+Check the logs 
+kubectl logs nginx
+
+kubectl describe pod nginx
+
+Stop the pod by running
+kubectl delete pod nginx
+
+Check the current state of pods
+kubectl get pods
+
+Kubernetes manifest
+A manifest defines the desired state for Kubernetes resources, such as Pods, Deployments, Services, etc., in a declarative manner. 
+ 
+Original command
+kubectl run nginx --image=nginx --port=80
+
+Manifest
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+    - containerPort: 80
+
+Applying the manifest
+kubectl apply -f manifest.yml
+
+Delete the pod
+kubectl delete pod nginx
