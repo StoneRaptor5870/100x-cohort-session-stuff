@@ -1,0 +1,55 @@
+Services
+
+In Kubernetes, a "Service" is an abstraction that defines a logical set of Pods and a policy by which to access them.
+Kubernetes Services provide a way to expose applications running on a set of Pods as network services.
+
+Pod Selector: Services use labels to select the Pods they target. A label selector identifies a set of Pods based on their labels.
+
+Service Types:
+ClusterIP: Exposes the Service on an internal IP in the cluster. This is the default ServiceType. The Service is only accessible
+           within the cluster.
+NodePort: Exposes the Service on each Node’s IP at a static port (the NodePort). A ClusterIP Service, to which the NodePort
+          Service routes, is automatically created. You can contact the NodePort Service, from outside the cluster, by requesting
+          <NodeIP>:<NodePort>.
+LoadBalancer: Exposes the Service externally using a cloud provider’s load balancer. NodePort and ClusterIP Services, to which the
+              external load balancer routes, are automatically created.
+
+Endpoints: These are automatically created and updated by Kubernetes when the Pods selected by a Service's selector change.
+
+Create service.yml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30007  # This port can be any valid port within the NodePort range
+  type: NodePort
+
+Restart the cluster with a few extra ports exposed (create kind.yml)
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 30007
+    hostPort: 30007
+- role: worker
+  extraPortMappings:
+  - containerPort: 30007
+    hostPort: 30008
+- role: worker
+  extraPortMappings:
+  - containerPort: 30007
+    hostPort: 30009
+
+kind create cluster --config kind.yml
+Re apply the deployment and the service
+Visit localhost:30007

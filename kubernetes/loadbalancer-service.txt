@@ -1,0 +1,50 @@
+Loadbalancer service
+
+In Kubernetes, a LoadBalancer service type is a way to expose a service to external clients. When you create a Service of type
+LoadBalancer, Kubernetes will automatically provision an external load balancer from your cloud provider
+(e.g., AWS, Google Cloud, Azure) to route traffic to your Kubernetes service
+
+Create deployment.yml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+Apply deployment
+
+kubectl apply -f deployment.yml
+
+Create service-lb.yml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+
+Apply the service
+
+kubectl apply -f service-lb.yml

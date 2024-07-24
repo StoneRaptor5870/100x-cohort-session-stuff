@@ -1,0 +1,131 @@
+Deployment
+
+A Deployment in Kubernetes is a higher-level abstraction that manages a set of Pods and provides declarative updates to them.
+It offers features like scaling, rolling updates, and rollback capabilities, making it easier to manage the lifecycle of applications.
+
+Replicaset
+
+A ReplicaSet in Kubernetes is a controller that ensures a specified number of pod replicas are running at any given time.
+It is used to maintain a stable set of replica Pods running in the cluster, even if some Pods fail or are deleted.
+When you create a deployment, you mention the amount of replicas you want for this specific pod to run. The deployment then
+creates a new ReplicaSet that is responsible for creating X number of pods.
+
+Series of events
+
+User creates a deployment which creates a replicaset which creates pods
+If pods go down, replicaset controller  ensures to bring them back up
+
+kubectl create deployment nginx-deployment --image=nginx --port=80 --replicas=3
+
+Create a replicaset
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replicaset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+Apply the manifest
+kubectl apply -f rs.yml
+
+Get the rs details
+kubectl get rs
+
+NAME               DESIRED   CURRENT   READY   AGE
+nginx-replicaset   3         3         3       23s
+
+Check the pods
+kubectl get pods
+
+NAME                     READY   STATUS    RESTARTS   AGE
+nginx-replicaset-7zp2v   1/1     Running   0          35s
+nginx-replicaset-q264f   1/1     Running   0          35s
+nginx-replicaset-vj42z   1/1     Running   0          35s
+
+Try deleting a pod and check if it self heals
+kubectl delete pod nginx-replicaset-7zp2v
+kubectl get pods
+
+Try adding a pod with the app=nginx
+kubectl run nginx-pod --image=nginx --labels="app=nginx"
+
+Ensure it gets terminated immedietely because the rs already has 3 pods
+Delete the replicaset
+kubectl delete rs nginx-deployment-576c6b7b6
+
+Create a deployment
+Lets create a deployment that starts 3 pods
+ 
+Create deployment.yml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+Apply the deployment
+kubectl apply -f deployment.yml
+
+Get the deployment
+kubectl get deployment
+
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   3/3     3            3           18s
+
+Get the rs
+kubectl get rs
+NAME                         DESIRED   CURRENT   READY   AGE
+nginx-deployment-576c6b7b6   3         3         3       34s
+
+Get the pod
+kubectl get pod
+NAME                               READY   STATUS    RESTARTS   AGE
+nginx-deployment-576c6b7b6-b6kgk   1/1     Running   0          46s
+nginx-deployment-576c6b7b6-m8ttl   1/1     Running   0          46s
+nginx-deployment-576c6b7b6-n9cx4   1/1     Running   0          46s
+
+Try deleting a pod
+kubectl delete pod nginx-deployment-576c6b7b6-b6kgk
+
+Ensure the pods are still up
+kubectl get pods
+
+Role of deployment
+Deployment ensures that there is a smooth deployment, and if the new image fails for some reason, the old replicaset is maintained.
+Even though the rs is what does pod management , deployment is what does rs management
+ 
+Rollbacks
+Check the history of deployment
+kubectl rollout history deployment/nginx-deployment
+
+Undo the last deployment
+kubectl rollout undo deployment/nginx-deployment
