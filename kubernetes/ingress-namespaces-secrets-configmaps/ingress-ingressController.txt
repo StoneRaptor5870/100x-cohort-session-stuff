@@ -1,0 +1,15 @@
+Ingress and Ingress Controller
+
+An API object that manages external access to the services in a cluster, typically HTTP.
+Ingress may provide load balancing, SSL termination and name-based virtual hosting.
+
+What is ingress?
+Ingress exposes HTTP and HTTPS routes from outside the cluster to service within the cluster. Traffic routing is controlled by rules
+defined on the ingress resourse.
+
+Here is a simple example where an ingress sends all its traffic to one service.
+
+Client -> Ingress maintained load balancer -> Cluster -> Ingress -> routing rule -> Service -> to different pods
+
+An Ingress does not expose arbitrary ports or protocols. Exposing services other than HTTP and HTTPS to the internet typically uses
+a service of type Service.Type=NodePort or Service.Type=LoadBalancer.
