@@ -1,0 +1,80 @@
+Traefik’s ingress controller
+
+Install traefik ingress controller using helm
+helm repo add traefik https://helm.traefik.io/traefik
+helm repo update
+helm install traefik traefi/traefik --namespace traefik --create-namespace
+
+Make sure an ingressClass is created for traefik
+kubectl get IngressClass
+
+It created a LoadBalancer svc for you
+kubectl get svc -n traefik
+
+Create a Ingress that uses the traefik ingressClass and traefik annotations (traefik.yml)
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: traefik-web-apps-ingress
+  namespace: default
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: nginx-rewrite@kubernetescrd,apache-rewrite@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: traefik-domain.com
+    http:
+      paths:
+      - path: /nginx
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port:
+              number: 80
+      - path: /apache
+        pathType: Prefix
+        backend:
+          service:
+            name: apache-service
+            port:
+              number: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: nginx-rewrite
+  namespace: default
+spec:
+  replacePathRegex:
+    regex: "^/nginx(.*)"
+    replacement: "/$1"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: apache-rewrite
+  namespace: default
+spec:
+  replacePathRegex:
+    regex: "^/apache(.*)"
+    replacement: "/$1"
+
+Traefik Annotations:
+traefik.ingress.kubernetes.io/router.entrypoints: web: Specifies the entry point for HTTP traffic (typically used when Traefik is configured with different entry points).
+traefik.ingress.kubernetes.io/router.middlewares: Specifies the middlewares to be applied to the router. Here, we use nginx-rewrite and apache-rewrite to handle path rewriting for each service.
+Middleware Resources:
+nginx-rewrite and apache-rewrite are defined as separate middleware resources.
+replacePathRegex:
+regex: "^/nginx(.*)" captures everything after /nginx.
+replacement: "/$1" rewrites the path to / and appends any additional path elements (e.g., /nginx/foo becomes /foo).
+This effectively rewrites the URL path before it reaches the backend services.
+
+Add an entry to your /etc/hosts  (IP should be your loadbalancer IP)
+65.20.90.183    traefik-domain.com
+
+Visit the website
+traefik-domain.com/nginx
+traefik-domain.com/apache

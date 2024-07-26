@@ -13,3 +13,16 @@ Client -> Ingress maintained load balancer -> Cluster -> Ingress -> routing rule
 
 An Ingress does not expose arbitrary ports or protocols. Exposing services other than HTTP and HTTPS to the internet typically uses
 a service of type Service.Type=NodePort or Service.Type=LoadBalancer.
+
+Ingress Controller
+
+Our control plane (master node) had a controller manager running.
+The kube-controller-manager runs a bunch of controllers like
+Replicaset controller
+Deployment controller
+
+If you want to add an ingress to your kubernetes cluster, you need to install an ingress controller manually. It doesn’t come by default in k8s
+Famous k8s ingress controllers
+The NGINX Ingress Controller for Kubernetes works with the NGINX webserver (as a proxy).
+HAProxy Ingress is an ingress controller for HAProxy.
+The Traefik Kubernetes Ingress provider is an ingress controller for the Traefik proxy.

@@ -1,0 +1,54 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: traefik-web-apps-ingress
+  namespace: default
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: nginx-strip@kubernetescrd,apache-strip@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: traefik-domain.com
+    http:
+      paths:
+      - path: /nginx
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port:
+              number: 80
+      - path: /apache
+        pathType: Prefix
+        backend:
+          service:
+            name: apache-service
+            port:
+              number: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: nginx-strip
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /nginx
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: apache-strip
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /apache
+
+# Path rewriting is using the StripPrefix middleware, which removes a specified prefix from the request path before
+# forwarding it to the backend service.
+
+# Removes the specified prefix (/nginx or /apache) from the request path.
+# This is a straightforward way to achieve path rewriting if the backend services expect requests starting with /.
