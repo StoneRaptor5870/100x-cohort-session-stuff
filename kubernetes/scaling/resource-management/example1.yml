@@ -1,0 +1,28 @@
+# 30% CPU usage on a single threaded Node.js app
+# Update the spec from the last slide to decrease the CPU usage. Notice that the CPU doesnt go over 30% even though this is a Node.js
+# app where it can go up to 100%
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cpu-app
+  template:
+    metadata:
+      labels:
+        app: cpu-app
+    spec:
+      containers:
+      - name: cpu-app
+        image: 100xdevs/week-28:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "100m"
+          limits:
+            cpu: "300m"

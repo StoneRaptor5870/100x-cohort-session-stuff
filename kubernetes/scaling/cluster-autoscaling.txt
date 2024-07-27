@@ -1,0 +1,32 @@
+Cluster autoscaling
+
+Cluster Autoscaler - a component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run
+and there are no unneeded nodes. Supports several public cloud providers.
+
+Logs of the cluster autoscaler
+kubectl get pods -n kube-system | grep cluster-autoscaler
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-deployment
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: cpu-app
+  template:
+    metadata:
+      labels:
+        app: cpu-app
+    spec:
+      containers:
+      - name: cpu-app
+        image: 100xdevs/week-28:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "1000m"
+          requests:
+            cpu: "1000m"
