@@ -1,0 +1,60 @@
+Automatic pv creation
+
+Create a persistent volume claim with storageClassName set to vultr-block-storage-hdd
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csi-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 40Gi
+  storageClassName: vultr-block-storage-hdd
+
+Apply the pod manifest
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongo-pod
+spec:
+  containers:
+  - name: mongo
+    image: mongo:4.4
+    command: ["mongod", "--bind_ip_all"]
+    ports:
+    - containerPort: 27017
+    volumeMounts:
+    - name: mongo-storage
+      mountPath: /data/db
+  volumes:
+  - name: mongo-storage
+    persistentVolumeClaim:
+      claimName: csi-pvc
+ 
+Explore the resources created
+
+kubectl get pv
+kubectl get pvc
+kubectl get pods
+
+Put some data in mongodb
+
+kubectl exec -it mongo-pod -- mongo
+use mydb
+db.mycollection.insert({ name: "Test", value: "This is a test" })
+exit
+
+Delete and restart the pod
+
+kubectl delete pod mongo-pod
+kubectl apply -f mongo.yml
+
+Check if the data persists
+
+kubectl exec -it mongo-pod -- mongo
+use mydb
+db.mycollection.find()
