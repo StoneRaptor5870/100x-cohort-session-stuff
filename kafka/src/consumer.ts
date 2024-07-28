@@ -1,22 +1,13 @@
 import { Kafka } from "kafkajs";
 
-const KafkaObj = new Kafka({
+const kafka = new Kafka({
   clientId: "my-app",
   brokers: ["localhost:9092"]
-});
+})
 
-const producer = KafkaObj.producer();
-const consumer = KafkaObj.consumer({groupId: "my-app3"});
+const consumer = kafka.consumer({ groupId: "my-app3" + Math.random() });
 
 async function main() {
-  await producer.connect();
-  await producer.send({
-    topic: "quickstart-events",
-    messages: [{
-      value: "kafka in node.js process"
-    }]
-  });
-
   await consumer.connect();
   await consumer.subscribe({
     topic: "quickstart-events", fromBeginning: true
@@ -33,5 +24,6 @@ async function main() {
     },
   });
 }
+
 
 main();
