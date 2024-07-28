@@ -12,10 +12,10 @@ async function main() {
   await producer.send({
     topic: "payment-done",
     messages: [{
-      value: "kafka in node.js process"
-    }]
+      value: "hi there",
+      key: "user1"                    // identifier for users kafka binds it to one specific partition
+    }] 
   });
 }
-
 
 main();
