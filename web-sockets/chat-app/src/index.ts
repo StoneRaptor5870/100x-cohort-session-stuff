@@ -24,6 +24,10 @@ wss.on('connection', function connection (userSocket) {
       subscriptions[id].rooms.push(parsedMessage.room);
     }
 
+    if (parsedMessage.type === 'UNSUBCRIBE') {
+      subscriptions[id].rooms = subscriptions[id].rooms.filter(x => x !== parsedMessage.room);
+    }
+
     if (parsedMessage.type === 'sendMessage') {
       const message = parsedMessage.message;
       const roomId = parsedMessage.roomId;
